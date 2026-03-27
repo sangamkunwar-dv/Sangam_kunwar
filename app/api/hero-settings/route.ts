@@ -17,7 +17,16 @@ export async function GET() {
 
     if (error) throw error;
 
-    return NextResponse.json(data || {});
+    // If no row exists, return default values
+    const defaultData = {
+      title: "I'm Sangam Kunwar",
+      subtitle: "Full-Stack Developer & Designer",
+      description: "I'm passionate about building beautiful, functional web applications.",
+      photo_url: "/sangamkunwarphoto.png",
+      logo_url: "",
+    };
+
+    return NextResponse.json(data || defaultData);
   } catch (error: any) {
     console.error("Hero GET:", error);
     return NextResponse.json(
@@ -33,12 +42,12 @@ export async function PUT(request: Request) {
     const supabase = createClient();
     const body = await request.json();
 
-    // Only include the fields we want
+    // Only include the allowed fields
     const heroData = {
       title: body.title || "",
       subtitle: body.subtitle || "",
       description: body.description || "",
-      photo_url: body.photo_url || "",
+      photo_url: body.photo_url || "/images/sangamkunwar-photo.jpg",
       logo_url: body.logo_url || "",
       updated_at: new Date().toISOString(),
     };
@@ -59,7 +68,7 @@ export async function PUT(request: Request) {
         .update(heroData)
         .eq("id", existing.id)
         .select()
-        .maybeSingle(); // safer than single()
+        .maybeSingle();
 
       if (error) throw error;
       return NextResponse.json(data);
