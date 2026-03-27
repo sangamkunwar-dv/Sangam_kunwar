@@ -62,12 +62,6 @@ export default function Header() {
             >
               Login
             </Link>
-            <Link
-              href="/admin"
-              className="hidden sm:inline-block px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-            >
-              Admin
-            </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="md:hidden p-2 hover:bg-muted rounded-lg transition-colors"
