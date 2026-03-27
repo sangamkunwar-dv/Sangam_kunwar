@@ -42,19 +42,19 @@ export default function Hero() {
             <div className="grid grid-cols-3 gap-8 pt-8 border-t border-border">
               <div className="group">
                 <p className="text-2xl sm:text-3xl font-bold text-primary group-hover:scale-110 transition-transform duration-300">
-                  50+
+                  15+
                 </p>
                 <p className="text-sm text-muted-foreground">Projects Completed</p>
               </div>
               <div className="group">
                 <p className="text-2xl sm:text-3xl font-bold text-primary group-hover:scale-110 transition-transform duration-300">
-                  5+
+                  2+
                 </p>
                 <p className="text-sm text-muted-foreground">Years Experience</p>
               </div>
               <div className="group">
                 <p className="text-2xl sm:text-3xl font-bold text-primary group-hover:scale-110 transition-transform duration-300">
-                  30+
+                  10+
                 </p>
                 <p className="text-sm text-muted-foreground">Happy Clients</p>
               </div>
