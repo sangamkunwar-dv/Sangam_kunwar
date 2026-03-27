@@ -31,7 +31,7 @@ export default function Header() {
                 className="w-full h-full object-cover"
               />
             </div>
-            <span className="hidden sm:inline font-bold text-lg">Sangam</span>
+            <span className="hidden sm:inline font-bold text-lg">Sangam Kunwar</span>
           </Link>
 
           {/* Desktop Navigation */}
