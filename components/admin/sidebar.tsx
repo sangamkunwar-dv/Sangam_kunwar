@@ -1,6 +1,7 @@
 "use client"
 
-import { LayoutDashboard, FileText, Calendar, Users, Mail, LogOut, Settings, ImageIcon } from "lucide-react"
+import { LayoutDashboard, FileText, Calendar, Users, Mail, LogOut, Settings, ImageIcon, Home } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 interface AdminSidebarProps {
   activeTab: string
@@ -9,15 +10,20 @@ interface AdminSidebarProps {
 }
 
 export default function AdminSidebar({ activeTab, setActiveTab, onLogout }: AdminSidebarProps) {
+  const router = useRouter()
+
   const menuItems = [
     { id: "overview", label: "Dashboard", icon: LayoutDashboard },
     { id: "hero", label: "Hero Section", icon: ImageIcon },
     { id: "projects", label: "Projects", icon: FileText },
-    { id: "events", label: "Events", icon: Calendar },
-    { id: "collaborators", label: "Collaborators", icon: Users },
+    { id: "skills", label: "Skills", icon: FileText },
     { id: "messages", label: "Messages", icon: Mail },
     { id: "settings", label: "Settings", icon: Settings },
   ]
+
+  const handleGoToWebsite = () => {
+    router.push("/")
+  }
 
   return (
     <aside className="w-64 bg-card border-r border-border flex flex-col">
@@ -44,7 +50,14 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }: Admi
         })}
       </nav>
 
-      <div className="p-4 border-t border-border">
+      <div className="p-4 border-t border-border space-y-2">
+        <button
+          onClick={handleGoToWebsite}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-secondary transition-colors"
+        >
+          <Home size={20} />
+          <span className="font-medium">View Website</span>
+        </button>
         <button
           onClick={onLogout}
           className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-secondary transition-colors"
