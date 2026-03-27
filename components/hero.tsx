@@ -29,18 +29,23 @@ export default function Hero() {
               technologies and a focus on user experience, I create solutions that make an impact.
             </p>
 
+            {/* Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button size="lg" className="gap-2 hover:shadow-lg transition-all duration-300">
-                View My Work
-                <ArrowRight size={18} />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="hover:shadow-lg transition-all duration-300 bg-transparent"
-              >
-                Get in Touch
-              </Button>
+              <a href="https://github.com/sangamkunwar" target="_blank" rel="noopener noreferrer">
+                <Button size="lg" className="gap-2 hover:shadow-lg transition-all duration-300">
+                  View My Work
+                  <ArrowRight size={18} />
+                </Button>
+              </a>
+              <a href="/login">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="hover:shadow-lg transition-all duration-300 bg-transparent"
+                >
+                  Get in Touch
+                </Button>
+              </a>
             </div>
 
             {/* Stats */}
