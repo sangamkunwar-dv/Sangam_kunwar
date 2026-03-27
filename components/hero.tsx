@@ -1,18 +1,23 @@
-import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
-import Image from "next/image"
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 export default function Hero() {
   return (
     <section id="about" className="relative overflow-hidden py-20 sm:py-32">
+      {/* Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5 pointer-events-none" />
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 relative">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-8 items-center">
           {/* Left Content */}
-          <div className="space-y-6 animate-in fade-in slide-in-from-left-4 duration-700">
+          <div className="space-y-6 animate-in fade-in slide-in-from-left duration-700">
             <div className="space-y-2">
-              <p className="text-sm font-semibold text-primary uppercase tracking-wider">Welcome to my portfolio</p>
+              <p className="text-sm font-semibold text-primary uppercase tracking-wider">
+                Welcome to my portfolio
+              </p>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-balance leading-tight">
                 I'm Sangam Kunwar
               </h1>
@@ -61,8 +66,8 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Right Image - Added your photo */}
-          <div className="relative h-96 sm:h-full min-h-96 rounded-2xl overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5 border border-border flex items-center justify-center group hover:shadow-2xl transition-all duration-500 animate-in fade-in slide-in-from-right-4 duration-700 delay-200">
+          {/* Right Image */}
+          <div className="relative h-96 sm:h-full min-h-[24rem] rounded-2xl overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5 border border-border flex items-center justify-center group hover:shadow-2xl transition-all duration-500 animate-in fade-in slide-in-from-right duration-700 delay-200">
             <Image
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sangamkunwar-photo-GXq7pe8eUe2K2gZjVFHR0dsmMu91d4.jpg"
               alt="Sangam Kunwar"
@@ -74,5 +79,5 @@ export default function Hero() {
         </div>
       </div>
     </section>
-  )
+  );
 }
