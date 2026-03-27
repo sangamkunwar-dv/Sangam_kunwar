@@ -31,13 +31,13 @@ export default function Hero() {
 
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <a href="https://github.com/sangamkunwar" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/sangamkunwar-dv" target="_blank" rel="noopener noreferrer">
                 <Button size="lg" className="gap-2 hover:shadow-lg transition-all duration-300">
                   View My Work
                   <ArrowRight size={18} />
                 </Button>
               </a>
-              <a href="/login">
+              <a href="/auth/login">
                 <Button
                   size="lg"
                   variant="outline"
