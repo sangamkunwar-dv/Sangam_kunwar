@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
-// ⚡ Tell Next.js this route is dynamic (always server-side)
+// Always server-side
 export const dynamic = "force-dynamic";
 
 // GET Hero
@@ -13,7 +13,7 @@ export async function GET() {
       .from("hero_settings")
       .select("*")
       .limit(1)
-      .maybeSingle();
+      .maybeSingle(); // returns null if no row
 
     if (error) throw error;
 
@@ -33,10 +33,17 @@ export async function PUT(request: Request) {
     const supabase = createClient();
     const body = await request.json();
 
-    // Ensure updated_at exists
-    body.updated_at = new Date().toISOString();
+    // Only include the fields we want
+    const heroData = {
+      title: body.title || "",
+      subtitle: body.subtitle || "",
+      description: body.description || "",
+      photo_url: body.photo_url || "",
+      logo_url: body.logo_url || "",
+      updated_at: new Date().toISOString(),
+    };
 
-    // Fetch existing row
+    // Check if a row already exists
     const { data: existing, error: fetchError } = await supabase
       .from("hero_settings")
       .select("id")
@@ -49,10 +56,10 @@ export async function PUT(request: Request) {
       // UPDATE existing row
       const { data, error } = await supabase
         .from("hero_settings")
-        .update(body)
+        .update(heroData)
         .eq("id", existing.id)
         .select()
-        .single();
+        .maybeSingle(); // safer than single()
 
       if (error) throw error;
       return NextResponse.json(data);
@@ -60,9 +67,9 @@ export async function PUT(request: Request) {
       // INSERT new row
       const { data, error } = await supabase
         .from("hero_settings")
-        .insert([body])
+        .insert([heroData])
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
       return NextResponse.json(data);
