@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
-// Always server-side
 export const dynamic = "force-dynamic";
 
 // GET Hero
@@ -13,24 +12,28 @@ export async function GET() {
       .from("hero_settings")
       .select("*")
       .limit(1)
-      .maybeSingle(); // returns null if no row
+      .maybeSingle();
 
-    if (error) throw error;
+    if (error) {
+      console.error("GET ERROR:", error);
+      throw error;
+    }
 
-    // If no row exists, return default values
     const defaultData = {
+      id: 1,
       title: "I'm Sangam Kunwar",
       subtitle: "Full-Stack Developer & Designer",
-      description: "I'm passionate about building beautiful, functional web applications.",
+      description:
+        "I'm passionate about building beautiful, functional web applications.",
       photo_url: "/sangamkunwarphoto.png",
       logo_url: "",
     };
 
-    return NextResponse.json(data || defaultData);
+    return NextResponse.json(data ?? defaultData);
   } catch (error: any) {
-    console.error("Hero GET:", error);
+    console.error("Hero GET ERROR:", error);
     return NextResponse.json(
-      { error: error.message || String(error) },
+      { error: error.message || "GET failed" },
       { status: 500 }
     );
   }
@@ -42,51 +45,64 @@ export async function PUT(request: Request) {
     const supabase = createClient();
     const body = await request.json();
 
-    // Only include the allowed fields
+    console.log("BODY RECEIVED:", body);
+
     const heroData = {
-      title: body.title || "",
-      subtitle: body.subtitle || "",
-      description: body.description || "",
-      photo_url: body.photo_url || "/images/sangamkunwar-photo.jpg",
-      logo_url: body.logo_url || "",
-      updated_at: new Date().toISOString(),
+      title: body.title ?? "",
+      subtitle: body.subtitle ?? "",
+      description: body.description ?? "",
+      photo_url:
+        body.photo_url ?? "/images/sangamkunwar-photo.jpg",
+      logo_url: body.logo_url ?? "",
     };
 
-    // Check if a row already exists
+    // 1️⃣ Check existing row
     const { data: existing, error: fetchError } = await supabase
       .from("hero_settings")
       .select("id")
       .limit(1)
       .maybeSingle();
 
-    if (fetchError) throw fetchError;
+    if (fetchError) {
+      console.error("FETCH ERROR:", fetchError);
+      throw fetchError;
+    }
 
+    // 2️⃣ UPDATE
     if (existing?.id) {
-      // UPDATE existing row
       const { data, error } = await supabase
         .from("hero_settings")
         .update(heroData)
         .eq("id", existing.id)
-        .select()
-        .maybeSingle();
+        .select();
 
-      if (error) throw error;
-      return NextResponse.json(data);
-    } else {
-      // INSERT new row
-      const { data, error } = await supabase
-        .from("hero_settings")
-        .insert([heroData])
-        .select()
-        .maybeSingle();
+      if (error) {
+        console.error("UPDATE ERROR:", error);
+        throw error;
+      }
 
-      if (error) throw error;
-      return NextResponse.json(data);
+      return NextResponse.json({ success: true, data });
     }
+
+    // 3️⃣ INSERT
+    const { data, error } = await supabase
+      .from("hero_settings")
+      .insert([heroData])
+      .select();
+
+    if (error) {
+      console.error("INSERT ERROR:", error);
+      throw error;
+    }
+
+    return NextResponse.json({ success: true, data });
   } catch (error: any) {
-    console.error("Hero PUT:", error);
+    console.error("Hero PUT ERROR:", error);
+
     return NextResponse.json(
-      { error: error.message || String(error) },
+      {
+        error: error.message || "PUT failed",
+      },
       { status: 500 }
     );
   }
