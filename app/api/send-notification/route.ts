@@ -1,21 +1,33 @@
+// app/api/send-notification/route.ts
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function POST(request: NextRequest) {
   try {
+    // 1️⃣ Parse the request body
     const body = await request.json()
     const { name, email, subject, message } = body
 
+    // 2️⃣ Validate required fields
+    if (!name || !email || !subject || !message) {
+      return NextResponse.json(
+        { error: "Missing required fields (name, email, subject, message)" },
+        { status: 400 }
+      )
+    }
+
+    // 3️⃣ Environment variables
     const adminEmail = process.env.ADMIN_EMAIL || "sangamkunwar48@gmail.com"
     const resendApiKey = process.env.RESEND_API_KEY
     const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev"
 
     if (!resendApiKey) {
-      console.warn("[sangamkunwar] RESEND_API_KEY not configured. Notification not sent.")
+      console.error("[sangamkunwar] RESEND_API_KEY not set in environment")
       return NextResponse.json({ error: "Email service not configured" }, { status: 500 })
     }
 
-    console.log("[sangamkunwar] Sending dashboard message notification to:", adminEmail)
+    console.log("[sangamkunwar] Sending dashboard message to:", adminEmail)
 
+    // 4️⃣ Send email via Resend
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -38,15 +50,17 @@ export async function POST(request: NextRequest) {
       }),
     })
 
+    // 5️⃣ Check Resend response
     if (!response.ok) {
-      const error = await response.text()
-      console.error("[sangamkunwar] Resend notification error:", error)
+      const errorText = await response.text()
+      console.error("[sangamkunwar] Resend API error:", errorText)
       return NextResponse.json({ error: "Failed to send notification" }, { status: 500 })
     }
 
+    // ✅ Success
     return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error("[sangamkunwar] Notification API error:", error)
+  } catch (err: any) {
+    console.error("[sangamkunwar] Notification API unexpected error:", err)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
