@@ -2,7 +2,7 @@
 import React from 'react';
 
 export const metadata = {
-  title: 'Privacy Policy | YourBrand',
+  title: 'Privacy Policy | Sangam Kunwar',
   description: 'Learn how we collect, use, and protect your personal data.',
 };
 
