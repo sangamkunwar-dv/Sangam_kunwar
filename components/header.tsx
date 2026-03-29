@@ -24,14 +24,14 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary">
               <Image
-                src="/sangamkunwarphoto.png"
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sangamkunwar-photo-enZYerWR8ovFofnT3vLvorXPWGU5X1.jpg"
                 alt="Sangam Kunwar"
                 width={40}
                 height={40}
                 className="w-full h-full object-cover"
               />
             </div>
-            <span className="hidden sm:inline font-bold text-lg">Sangam Kunwar</span>
+            <span className="hidden sm:inline font-bold text-lg">Sangam</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -61,6 +61,12 @@ export default function Header() {
               className="hidden sm:inline-block px-4 py-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
             >
               Login
+            </Link>
+            <Link
+              href="/admin"
+              className="hidden sm:inline-block px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+            >
+              Admin
             </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}

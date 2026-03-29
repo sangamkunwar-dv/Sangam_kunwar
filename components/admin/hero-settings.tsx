@@ -6,80 +6,35 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
-interface HeroSettings {
-  id?: string
-  title: string
-  subtitle: string
-  description: string
-  photo_url: string
-  logo_url: string
-}
-
 export default function HeroSettings() {
-  const [heroContent, setHeroContent] = useState<HeroSettings>({
+  const [heroContent, setHeroContent] = useState({
     title: "I'm Sangam Kunwar",
     subtitle: "Full-Stack Developer & Designer",
     description: "I'm passionate about building beautiful, functional web applications.",
     photo_url:
-      "/images/sangamkunwar-photo.jpg",
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/sangamkunwar-photo-GXq7pe8eUe2K2gZjVFHR0dsmMu91d4.jpg",
     logo_url: "",
   })
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState("")
-  const [messageType, setMessageType] = useState<"success" | "error" | "">("")
 
   useEffect(() => {
-    fetchHeroSettings()
+    const saved = localStorage.getItem("hero_content")
+    if (saved) {
+      setHeroContent(JSON.parse(saved))
+    }
   }, [])
 
-  const fetchHeroSettings = async () => {
+  const handleSave = async () => {
+    setLoading(true)
     try {
-      setLoading(true)
-      const response = await fetch("/api/hero-settings")
-      if (!response.ok) throw new Error("Failed to fetch hero settings")
-      const data = await response.json()
-      if (data && data.id) {
-        setHeroContent(data)
-      }
+      localStorage.setItem("hero_content", JSON.stringify(heroContent))
+      setMessage("Hero content updated successfully!")
+      setTimeout(() => setMessage(""), 3000)
     } catch (error) {
-      console.error("[v0] Error fetching hero settings:", error)
-      showMessage("Failed to load hero settings", "error")
+      setMessage("Error updating hero content")
     } finally {
       setLoading(false)
-    }
-  }
-
-  const showMessage = (msg: string, type: "success" | "error") => {
-    setMessage(msg)
-    setMessageType(type)
-    setTimeout(() => setMessage(""), 3000)
-  }
-
-  const handleSave = async () => {
-    setSaving(true)
-    try {
-      const response = await fetch("/api/hero-settings", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: heroContent.title,
-          subtitle: heroContent.subtitle,
-          description: heroContent.description,
-          photo_url: heroContent.photo_url,
-          logo_url: heroContent.logo_url,
-        }),
-      })
-
-      if (!response.ok) throw new Error("Failed to save hero settings")
-      const data = await response.json()
-      setHeroContent(data)
-      showMessage("Hero content updated successfully!", "success")
-    } catch (error) {
-      console.error("[v0] Error saving hero settings:", error)
-      showMessage("Error updating hero content", "error")
-    } finally {
-      setSaving(false)
     }
   }
 
@@ -144,18 +99,14 @@ export default function HeroSettings() {
 
           {message && (
             <div
-              className={`p-3 rounded-lg text-sm ${
-                messageType === "success"
-                  ? "bg-green-500/10 border border-green-500/20 text-green-700 dark:text-green-400"
-                  : "bg-destructive/10 border border-destructive/20 text-destructive"
-              }`}
+              className={`p-3 rounded-lg text-sm ${message.includes("Error") ? "bg-destructive/10 text-destructive" : "bg-green-500/10 text-green-600"}`}
             >
               {message}
             </div>
           )}
 
-          <Button onClick={handleSave} disabled={saving} className="w-full">
-            {saving ? "Saving..." : "Save Changes"}
+          <Button onClick={handleSave} disabled={loading} className="w-full">
+            {loading ? "Saving..." : "Save Changes"}
           </Button>
         </CardContent>
       </Card>

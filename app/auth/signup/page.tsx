@@ -7,7 +7,7 @@ import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card } from "@/components/ui/card" // This was likely missing!
+import { Card } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 import { ArrowLeft } from "lucide-react"
 
@@ -20,29 +20,13 @@ export default function SignupPage() {
   const { toast } = useToast()
   const supabase = createClient()
 
-  const handleOAuthLogin = async (provider: "github" | "google") => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
-      })
-      if (error) throw error
-    } catch (err: any) {
-      toast({
-        title: "OAuth Error",
-        description: err.message,
-        variant: "destructive",
-      })
-    }
-  }
-
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
 
     try {
+      console.log("[v0] Attempting signup for:", email)
+      
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -55,6 +39,7 @@ export default function SignupPage() {
       })
 
       if (error) {
+        console.error("[v0] Signup error:", error)
         toast({
           title: "Signup Failed",
           description: error.message,
@@ -64,18 +49,22 @@ export default function SignupPage() {
       }
 
       if (data.user) {
+        console.log("[v0] Signup successful, email confirmation required")
         toast({
           title: "Account Created!",
-          description: "Please check your email for the verification link.",
+          description: "Please check your email and click the verification link to activate your account.",
         })
+        
+        // Redirect to verification page after a moment
         setTimeout(() => {
           router.push("/auth/verify-email")
         }, 1500)
       }
     } catch (err) {
+      console.error("[v0] Unexpected signup error:", err)
       toast({
         title: "Error",
-        description: "An unexpected error occurred",
+        description: "An unexpected error occurred during signup",
         variant: "destructive",
       })
     } finally {
@@ -101,7 +90,7 @@ export default function SignupPage() {
           </div>
 
           <form onSubmit={handleSignup} className="space-y-4">
-            <div className="space-y-2">
+            <div>
               <label className="text-sm font-medium">Full Name</label>
               <Input
                 type="text"
@@ -112,7 +101,7 @@ export default function SignupPage() {
               />
             </div>
 
-            <div className="space-y-2">
+            <div>
               <label className="text-sm font-medium">Email</label>
               <Input
                 type="email"
@@ -123,7 +112,7 @@ export default function SignupPage() {
               />
             </div>
 
-            <div className="space-y-2">
+            <div>
               <label className="text-sm font-medium">Password</label>
               <Input
                 type="password"
@@ -138,34 +127,6 @@ export default function SignupPage() {
               {loading ? "Creating account..." : "Sign Up"}
             </Button>
           </form>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or join with</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <Button variant="outline" onClick={() => handleOAuthLogin("github")} disabled={loading}>
-              <img 
-                src="https://authjs.dev/img/providers/github.svg" 
-                alt="GitHub" 
-                className="mr-2 h-4 w-4 dark:invert" 
-              />
-              GitHub
-            </Button>
-            <Button variant="outline" onClick={() => handleOAuthLogin("google")} disabled={loading}>
-              <img 
-                src="https://authjs.dev/img/providers/google.svg" 
-                alt="Google" 
-                className="mr-2 h-4 w-4" 
-              />
-              Google
-            </Button>
-          </div>
 
           <div className="text-center text-sm">
             <p className="text-muted-foreground">

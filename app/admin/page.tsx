@@ -1,11 +1,9 @@
 "use client"
-
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { createClient } from "@/lib/supabase/client"
 import AdminSidebar from "@/components/admin/sidebar"
 import ProjectsManager from "@/components/admin/projects-manager"
-import SkillsManager from "@/components/admin/skills-manager"
 import EventsManager from "@/components/admin/events-manager"
 import CollaboratorsManager from "@/components/admin/collaborators-manager"
 import DashboardOverview from "@/components/admin/dashboard-overview"
@@ -15,15 +13,7 @@ import HeroSettings from "@/components/admin/hero-settings"
 import { useToast } from "@/hooks/use-toast"
 import { Skeleton } from "@/components/ui/skeleton"
 
-type AdminTab =
-  | "overview"
-  | "hero"
-  | "projects"
-  | "skills"
-  | "events"
-  | "collaborators"
-  | "messages"
-  | "settings"
+type AdminTab = "overview" | "hero" | "projects" | "events" | "collaborators" | "messages" | "settings"
 
 const ADMIN_EMAIL = "sangamkunwar48@gmail.com"
 
@@ -31,7 +21,6 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<AdminTab>("overview")
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-
   const router = useRouter()
   const { toast } = useToast()
   const supabase = createClient()
@@ -39,40 +28,31 @@ export default function AdminPage() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        console.log("[Sangam Kunwar] Checking admin authentication...")
-
+        console.log("[v0] Checking admin authentication...")
         const {
           data: { session },
         } = await supabase.auth.getSession()
 
         if (session) {
-          console.log("[Sangam Kunwar] Session found:", session.user.email)
-
+          console.log("[v0] Session found:", session.user.email)
           if (session.user.email === ADMIN_EMAIL) {
-            console.log("[Sangam Kunwar] Admin access granted")
+            console.log("[v0] Admin access granted")
             setUser(session.user)
           } else {
-            console.warn(
-              "[Sangam Kunwar] Unauthorized access attempt by:",
-              session.user.email
-            )
-
+            console.warn("[v0] Unauthorized access attempt by:", session.user.email)
             toast({
               title: "Access Denied",
               description: "This area is strictly for the administrator.",
               variant: "destructive",
             })
-
             window.location.href = "/"
           }
         } else {
-          console.log(
-            "[Sangam Kunwar] No session found, redirecting to login"
-          )
+          console.log("[v0] No session found, redirecting to login")
           window.location.href = "/auth/login?redirect=/admin"
         }
       } catch (err) {
-        console.error("[Sangam Kunwar] Admin auth check failed:", err)
+        console.error("[v0] Admin auth check failed:", err)
         router.push("/auth/login")
       } finally {
         setLoading(false)
@@ -102,24 +82,17 @@ export default function AdminPage() {
 
   return (
     <div className="flex h-screen bg-background">
-      <AdminSidebar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        onLogout={handleLogout}
-      />
+      <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} onLogout={handleLogout} />
 
       <main className="flex-1 overflow-auto">
         <div className="p-8">
           {activeTab === "overview" && <DashboardOverview />}
           {activeTab === "hero" && <HeroSettings />}
           {activeTab === "projects" && <ProjectsManager />}
-          {activeTab === "skills" && <SkillsManager />}
           {activeTab === "events" && <EventsManager />}
           {activeTab === "collaborators" && <CollaboratorsManager />}
           {activeTab === "messages" && <MessagesManager />}
-          {activeTab === "settings" && (
-            <AdminSettings userEmail={user.email} />
-          )}
+          {activeTab === "settings" && <AdminSettings userEmail={user.email} />}
         </div>
       </main>
     </div>

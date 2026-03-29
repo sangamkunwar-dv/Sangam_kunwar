@@ -1,5 +1,4 @@
 import { Github, Linkedin, Mail, Phone, MapPin } from "lucide-react"
-import Link from "next/link"
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -11,23 +10,16 @@ export default function Footer() {
       label: "LinkedIn",
     },
     { icon: Github, href: "https://github.com/sangamkunwar-dv", label: "GitHub" },
-    { icon: Mail, href: "mailto:info@sangamkunwar.com.np", label: "Email" },
+    { icon: Mail, href: "mailto:sangamkunwae48@gmail.com", label: "Email" },
   ]
 
   return (
     <footer id="contact" className="border-t border-border bg-muted/30">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="grid gap-8 md:grid-cols-3 mb-8">
-          {/* Brand & Logo */}
+          {/* Brand */}
           <div className="space-y-4">
-            <Link href="/" className="flex items-center gap-2 group">
-              <img 
-                src="/sangamkunwarphoto.png" 
-                alt="Logo" 
-                className="h-8 w-8 rounded-md object-contain transition-transform group-hover:scale-110" 
-              />
-              <h3 className="text-lg font-bold text-primary">Sangam Kunwar</h3>
-            </Link>
+            <h3 className="text-lg font-bold text-primary">Sangam Kunwar</h3>
             <p className="text-sm text-muted-foreground">
               Full-stack developer building beautiful digital experiences with modern web technologies.
             </p>
@@ -39,8 +31,8 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li className="flex items-center gap-2 text-muted-foreground">
                 <Mail size={16} />
-                <a href="info@sangamkunwar.com.np" className="hover:text-foreground transition-colors">
-                  info@sangamkunwar.com.np
+                <a href="mailto:sangamkunwae48@gmail.com" className="hover:text-foreground transition-colors">
+                  sangamkunwae48@gmail.com
                 </a>
               </li>
               <li className="flex items-center gap-2 text-muted-foreground">

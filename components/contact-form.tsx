@@ -176,8 +176,8 @@ export default function ContactForm() {
               <CardContent className="space-y-6">
                 <div>
                   <h4 className="font-semibold text-foreground mb-2">Email</h4>
-                  <a href="mailto:info@sangamkunwar.com.np" className="text-primary hover:underline">
-                    info@sangamkunwar.com.np
+                  <a href="mailto:sangamkunwae48@gmail.com" className="text-primary hover:underline">
+                    sangamkunwae48@gmail.com
                   </a>
                 </div>
 

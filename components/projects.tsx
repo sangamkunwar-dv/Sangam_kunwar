@@ -12,10 +12,24 @@ const projects = [
   },
   {
     id: 2,
+    title: "Task Management App",
+    description: "Collaborative task management tool with real-time updates and team collaboration features.",
+    tags: ["React", "Firebase", "Tailwind CSS", "WebSocket"],
+    image: "/task-management-app.png",
+  },
+  {
+    id: 3,
     title: "Analytics Dashboard",
     description: "Data visualization dashboard with interactive charts and real-time analytics.",
     tags: ["Next.js", "Recharts", "Supabase", "TypeScript"],
     image: "/analytics-dashboard-charts.png",
+  },
+  {
+    id: 4,
+    title: "Social Media App",
+    description: "Social networking platform with user profiles, messaging, and content sharing.",
+    tags: ["React Native", "Node.js", "MongoDB", "Socket.io"],
+    image: "/social-media-app-interface.png",
   },
 ]
 
