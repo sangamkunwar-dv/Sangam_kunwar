@@ -10,11 +10,11 @@ export async function POST(request: NextRequest) {
     const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev"
 
     if (!resendApiKey) {
-      console.warn("[v0] RESEND_API_KEY not configured. Notification not sent.")
+      console.warn("[sangamkunwar] RESEND_API_KEY not configured. Notification not sent.")
       return NextResponse.json({ error: "Email service not configured" }, { status: 500 })
     }
 
-    console.log("[v0] Sending dashboard message notification to:", adminEmail)
+    console.log("[sangamkunwar] Sending dashboard message notification to:", adminEmail)
 
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -40,13 +40,13 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       const error = await response.text()
-      console.error("[v0] Resend notification error:", error)
+      console.error("[sangamkunwar] Resend notification error:", error)
       return NextResponse.json({ error: "Failed to send notification" }, { status: 500 })
     }
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error("[v0] Notification API error:", error)
+    console.error("[sangamkunwar] Notification API error:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
