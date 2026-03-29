@@ -1,4 +1,5 @@
-import { Github, Linkedin, Mail, Phone, MapPin } from "lucide-react"
+import Link from "next/link" // Added Link for internal routing
+import { Github, Linkedin, Mail, Phone, MapPin, ShieldCheck } from "lucide-react"
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -27,7 +28,7 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div className="space-y-4">
-            <h4 className="font-semibold">Contact</h4>
+            <h4 className="font-semibold text-foreground">Contact</h4>
             <ul className="space-y-2 text-sm">
               <li className="flex items-center gap-2 text-muted-foreground">
                 <Mail size={16} />
@@ -37,7 +38,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2 text-muted-foreground">
                 <Phone size={16} />
-                <a href="tel:+9701024066" className="hover:text-foreground transition-colors">
+                <a href="tel:+9779701024066" className="hover:text-foreground transition-colors">
                   +977 9701024066
                 </a>
               </li>
@@ -50,7 +51,7 @@ export default function Footer() {
 
           {/* Social Links */}
           <div className="space-y-4">
-            <h4 className="font-semibold">Connect</h4>
+            <h4 className="font-semibold text-foreground">Connect</h4>
             <div className="flex gap-4">
               {socialLinks.map((social) => {
                 const Icon = social.icon
@@ -61,7 +62,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.label}
-                    className="p-2 rounded-lg bg-muted hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors"
+                    className="p-2 rounded-lg bg-muted hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors border border-transparent hover:border-primary/20"
                   >
                     <Icon size={20} />
                   </a>
@@ -71,9 +72,20 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="border-t border-border pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+        {/* Bottom Bar */}
+        <div className="border-t border-border pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
           <p>&copy; {currentYear} Sangam Kunwar. All rights reserved.</p>
+          
+          {/* Privacy & Legal Section */}
+          <div className="flex items-center gap-6">
+            <Link 
+              href="/privacy" 
+              className="flex items-center gap-1.5 hover:text-primary transition-colors"
+            >
+              <ShieldCheck size={14} />
+              Privacy Policy
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
