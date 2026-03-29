@@ -27,7 +27,7 @@ export default function Hero({ initialData }: { initialData: any }) {
             </div>
 
             <p className="text-lg text-muted-foreground leading-relaxed">
-              {data?.description || "Building beautiful web applications..."}
+              {data?.description || "I'm passionate about building beautiful, functional web applications."}
             </p>
 
             {/* Stats */}
