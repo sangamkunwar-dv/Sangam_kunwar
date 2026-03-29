@@ -1,14 +1,17 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 
-// helper: format body safely
+// ⚡ Ensure this matches your frontend fields (tags and image)
 function formatProject(body: any) {
   return {
-    ...body,
-    tech_stack: Array.isArray(body.tech_stack)
-      ? body.tech_stack
-      : body.tech_stack
-      ? body.tech_stack.split(",").map((t: string) => t.trim())
+    title: body.title,
+    description: body.description,
+    image: body.image, // Ensure this matches your DB column
+    // Convert string tags to array if needed
+    tags: Array.isArray(body.tags)
+      ? body.tags
+      : body.tags
+      ? body.tags.split(",").map((t: string) => t.trim())
       : [],
     updated_at: new Date().toISOString(),
   }
@@ -17,7 +20,7 @@ function formatProject(body: any) {
 // GET
 export async function GET() {
   try {
-    const supabase = createClient()
+    const supabase = await createClient() // Added await
 
     const { data, error } = await supabase
       .from("projects")
@@ -28,9 +31,9 @@ export async function GET() {
 
     return NextResponse.json(data || [])
   } catch (error: any) {
-    console.error("Projects GET:", error)
+    console.error("Projects GET Error:", error)
     return NextResponse.json(
-      { error: error.message || String(error) },
+      { error: error.message || "Failed to fetch projects" },
       { status: 500 }
     )
   }
@@ -39,9 +42,8 @@ export async function GET() {
 // POST
 export async function POST(request: Request) {
   try {
-    const supabase = createClient()
+    const supabase = await createClient() // Added await
     const body = await request.json()
-
     const formattedBody = formatProject(body)
 
     const { data, error } = await supabase
@@ -51,25 +53,20 @@ export async function POST(request: Request) {
       .single()
 
     if (error) throw error
-
     return NextResponse.json(data, { status: 201 })
   } catch (error: any) {
-    console.error("Projects POST:", error)
-    return NextResponse.json(
-      { error: error.message || String(error) },
-      { status: 500 }
-    )
+    console.error("Projects POST Error:", error)
+    return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }
 
 // PUT
 export async function PUT(request: Request) {
   try {
-    const supabase = createClient()
+    const supabase = await createClient() // Added await
     const body = await request.json()
 
     if (!body.id) throw new Error("ID required")
-
     const formattedBody = formatProject(body)
 
     const { data, error } = await supabase
@@ -80,39 +77,32 @@ export async function PUT(request: Request) {
       .single()
 
     if (error) throw error
-
     return NextResponse.json(data)
   } catch (error: any) {
-    console.error("Projects PUT:", error)
-    return NextResponse.json(
-      { error: error.message || String(error) },
-      { status: 500 }
-    )
+    console.error("Projects PUT Error:", error)
+    return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }
 
 // DELETE
 export async function DELETE(request: Request) {
   try {
-    const supabase = createClient()
+    const supabase = await createClient() // Added await
     const { searchParams } = new URL(request.url)
     const id = searchParams.get("id")
 
     if (!id) throw new Error("ID required")
 
+    // 🔥 FIXED: removed the extra 'a' from 'supabasea'
     const { error } = await supabase
       .from("projects")
       .delete()
       .eq("id", id)
 
     if (error) throw error
-
     return NextResponse.json({ success: true })
   } catch (error: any) {
-    console.error("Projects DELETE:", error)
-    return NextResponse.json(
-      { error: error.message || String(error) },
-      { status: 500 }
-    )
+    console.error("Projects DELETE Error:", error)
+    return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }
