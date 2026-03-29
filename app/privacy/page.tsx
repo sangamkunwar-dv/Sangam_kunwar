@@ -87,14 +87,14 @@ export default function PrivacyPolicy() {
               If you have questions about this policy, please reach out:
             </p>
             <div className="mt-4 text-sm font-medium">
-              <p>Email: privacy@yourdomain.com</p>
-              <p>Location: San Francisco, CA</p>
+              <p>Email: info@sangamkunwar.com.np</p>
+              <p>Location: Tilottama-8, Charnumber</p>
             </div>
           </section>
         </div>
 
         <footer className="mt-12 pt-8 border-t border-gray-100 text-center text-gray-400 text-xs">
-          &copy; {new Date().getFullYear()} Your Brand Name. All rights reserved.
+          &copy; {new Date().getFullYear()} Sangam Kunwar. All rights reserved.
         </footer>
       </div>
     </div>
