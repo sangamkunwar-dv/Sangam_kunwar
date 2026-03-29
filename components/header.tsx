@@ -56,17 +56,26 @@ export default function Header() {
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </button>
+            
             <Link
               href="/auth/login"
-              className="hidden sm:inline-block px-4 py-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+              className="hidden sm:inline-block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
               Login
             </Link>
+
+            {/* FIXED: Removed the broken Link and added a proper Sign Up button */}
             <Link
+              href="/auth/signup"
+              className="hidden sm:inline-block px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+            >
+              Sign Up
+            </Link>
 
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="md:hidden p-2 hover:bg-muted rounded-lg transition-colors"
+              aria-label="Toggle menu"
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -75,7 +84,7 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden mt-4 space-y-2 pb-4">
+          <div className="md:hidden mt-4 space-y-2 pb-4 border-t border-border pt-4">
             {navItems.map((item) => (
               <Link
                 key={item.label}
@@ -86,6 +95,23 @@ export default function Header() {
                 {item.label}
               </Link>
             ))}
+            {/* Mobile Auth Links */}
+            <div className="grid grid-cols-2 gap-2 px-4 pt-2">
+              <Link 
+                href="/auth/login" 
+                className="text-center py-2 text-sm font-medium border border-input rounded-lg"
+                onClick={() => setIsOpen(false)}
+              >
+                Login
+              </Link>
+              <Link 
+                href="/auth/signup" 
+                className="text-center py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg"
+                onClick={() => setIsOpen(false)}
+              >
+                Sign Up
+              </Link>
+            </div>
           </div>
         )}
       </nav>
