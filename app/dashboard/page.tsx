@@ -3,13 +3,14 @@
 import type React from "react"
 import { useEffect, useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link" // Added for navigation
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { LogOut, Send, MessageSquare, History } from "lucide-react"
+import { LogOut, Send, MessageSquare, History, Globe } from "lucide-react" // Added Globe icon
 
 export default function DashboardPage() {
   const [user, setUser] = useState<any>(null)
@@ -52,19 +53,17 @@ export default function DashboardPage() {
         setUser(session.user)
         await fetchMessages(session.user.id)
 
-        // ⚡ REALTIME LISTENER: Listen for the 'approved' status change
         channel = supabase
           .channel(`public:messages:sender_id=eq.${session.user.id}`)
           .on(
             'postgres_changes',
             { 
-              event: '*', // Listen for any change (Update/Insert/Delete)
+              event: '*', 
               schema: 'public', 
               table: 'messages',
             },
             (payload) => {
-              console.log("Change received!", payload)
-              fetchMessages(session.user.id) // Automatically refresh the UI
+              fetchMessages(session.user.id)
             }
           )
           .subscribe()
@@ -114,7 +113,6 @@ export default function DashboardPage() {
       toast({ title: "Success!", description: "Message sent! Waiting for approval." })
       setMessage("")
       setSubject("")
-      // No need to manually fetch here if Realtime is working, but it doesn't hurt
       fetchMessages(user.id)
     } catch (err: any) {
       toast({ title: "Error", description: err.message, variant: "destructive" })
@@ -140,18 +138,29 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="mx-auto max-w-6xl">
-        <header className="flex justify-between items-center mb-8 border-b pb-6">
+        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 border-b pb-6 gap-4">
           <div>
             <h1 className="text-3xl font-bold">User Dashboard</h1>
-            <p className="text-sm text-muted-foreground">User: {user?.email}</p>
+            <p className="text-sm text-muted-foreground">Logged in as: {user?.email}</p>
           </div>
-          <Button variant="destructive" size="sm" onClick={handleLogout}>
-            <LogOut className="mr-2 h-4 w-4" /> Sign Out
-          </Button>
+          
+          {/* Action Buttons */}
+          <div className="flex items-center gap-3">
+            {/* 1. VIEW WEBSITE BUTTON */}
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/">
+                <Globe className="mr-2 h-4 w-4" /> View Website
+              </Link>
+            </Button>
+
+            {/* 2. NON-RED LOGOUT BUTTON */}
+            <Button variant="ghost" size="sm" onClick={handleLogout} className="text-muted-foreground hover:text-foreground">
+              <LogOut className="mr-2 h-4 w-4" /> Sign Out
+            </Button>
+          </div>
         </header>
 
         <div className="grid gap-8 lg:grid-cols-12">
-          {/* New Message Form */}
           <Card className="lg:col-span-7 p-6 border-2">
             <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
               <MessageSquare className="h-5 w-5" /> Send a Message
@@ -176,7 +185,6 @@ export default function DashboardPage() {
             </form>
           </Card>
 
-          {/* Recent History */}
           <Card className="lg:col-span-5 p-6 bg-muted/20">
             <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
               <History className="h-5 w-5" /> History
@@ -186,7 +194,7 @@ export default function DashboardPage() {
                 <p className="text-center text-muted-foreground py-10 italic">No messages sent yet.</p>
               ) : (
                 messages.map((msg) => (
-                  <div key={msg.id} className="p-4 rounded-lg bg-white border shadow-sm">
+                  <div key={msg.id} className="p-4 rounded-lg bg-white dark:bg-zinc-900 border shadow-sm">
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="font-bold text-sm truncate max-w-[150px]">{msg.subject}</h3>
                       <span className={`text-[10px] px-2 py-1 rounded-full font-black uppercase ${
