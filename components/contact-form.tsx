@@ -40,21 +40,21 @@ export default function ContactForm() {
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       })
 
+      const data = await response.json()
+
       if (!response.ok) {
-        throw new Error("Failed to send message")
+        throw new Error(data.error || "Failed to send message")
       }
 
-      toast.success("Message sent successfully! I'll get back to you soon.")
+      toast.success("Message sent successfully!")
       form.reset()
-    } catch (error) {
-      toast.error("Failed to send message. Please try again.")
-      console.error("Contact form error:", error)
+    } catch (error: any) {
+      console.error("Submit Error:", error)
+      toast.error(error.message || "Something went wrong. Please try again.")
     } finally {
       setIsSubmitting(false)
     }
@@ -66,13 +66,11 @@ export default function ContactForm() {
         <div className="mb-12">
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">Get In Touch</h2>
           <p className="text-lg text-muted-foreground">
-            Have a project in mind or want to collaborate? I'd love to hear from you. Send me a message and I'll respond
-            as soon as possible.
+            Have a project in mind? Send me a message and I'll respond as soon as possible.
           </p>
         </div>
 
         <div className="grid gap-8 md:grid-cols-2">
-          {/* Contact Form */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -140,92 +138,29 @@ export default function ContactForm() {
                   />
 
                   <Button type="submit" disabled={isSubmitting} className="w-full">
-                    {isSubmitting ? (
-                      <>
-                        <span className="animate-spin">⏳</span>
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        <Send size={18} />
-                        Send Message
-                      </>
-                    )}
+                    {isSubmitting ? "Sending..." : "Send Message"}
                   </Button>
                 </form>
               </Form>
-
-              <div className="mt-6 pt-6 border-t border-border">
-                <p className="text-sm text-muted-foreground mb-3">Want to send a message with your account?</p>
-                <Link href="/messages" className="block">
-                  <Button variant="outline" className="w-full gap-2 bg-transparent">
-                    <MessageSquare size={18} />
-                    Send Message (Login Required)
-                  </Button>
-                </Link>
-              </div>
             </CardContent>
           </Card>
 
-          {/* Contact Info */}
+          {/* Contact Info Sidebar */}
           <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>Contact Information</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-4">
                 <div>
-                  <h4 className="font-semibold text-foreground mb-2">Email</h4>
+                  <h4 className="font-semibold">Email</h4>
                   <a href="mailto:info@sangamkunwar.com.np" className="text-primary hover:underline">
                     info@sangamkunwar.com.np
                   </a>
                 </div>
-
                 <div>
-                  <h4 className="font-semibold text-foreground mb-2">Phone</h4>
-                  <a href="tel:+9701024066" className="text-primary hover:underline">
-                    +977 9701024066
-                  </a>
-                </div>
-
-                <div>
-                  <h4 className="font-semibold text-foreground mb-2">Location</h4>
+                  <h4 className="font-semibold">Location</h4>
                   <p className="text-muted-foreground">Tilottama-8, Rupandehi, Nepal</p>
-                </div>
-
-                <div>
-                  <h4 className="font-semibold text-foreground mb-2">Social Links</h4>
-                  <div className="space-y-2">
-                    <a
-                      href="https://www.linkedin.com/in/sangam-kunwar-14b89834a/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block text-primary hover:underline"
-                    >
-                      LinkedIn
-                    </a>
-                    <a
-                      href="https://github.com/sangamkunwar-dv"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block text-primary hover:underline"
-                    >
-                      GitHub
-                    </a>
-                    <a
-                      href="https://www.instagram.com/sangam_____daji/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block text-primary hover:underline"
-                    >
-                      Instagram
-                    </a>
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="font-semibold text-foreground mb-2">Response Time</h4>
-                  <p className="text-muted-foreground">I typically respond within 24-48 hours.</p>
                 </div>
               </CardContent>
             </Card>
