@@ -3,14 +3,13 @@
 import Link from "next/link"
 import Image from "next/image"
 // --- IMPORT YOUR ACTUAL NAVBAR COMPONENT ---
-import Navbar from "@/components/navbar" 
+import Navbar from "@/components/header" 
 import { Button } from "@/components/ui/button"
 import { Home, ArrowLeft } from "lucide-react"
 
 export default function NotFound() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      {/* 1. YOUR ACTUAL WEBSITE NAVBAR */}
       <Navbar />
 
       {/* 2. THE 404 CONTENT SECTION */}
