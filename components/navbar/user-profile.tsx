@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
-import { LogOut, LayoutDashboard, Settings } from "lucide-react" // Added icons for a nicer look
+import { LogOut, LayoutDashboard, Settings } from "lucide-react"
 
 export default function UserProfile() {
   const [user, setUser] = useState<any>(null)
@@ -52,13 +52,14 @@ export default function UserProfile() {
           </Avatar>
         </DropdownMenuTrigger>
         
-        <DropdownMenuContent align="start" className="w-64 mt-2 p-2 shadow-xl border-border/50 backdrop-blur-md">
+        {/* Adjusted the width slightly for better flow on mobile and desktop */}
+        <DropdownMenuContent align="start" className="w-60 mt-2 p-1.5 shadow-xl border-border/50 backdrop-blur-md">
           <DropdownMenuLabel className="font-normal px-2 py-3">
             <div className="flex flex-col space-y-1">
-              <p className="text-sm font-bold leading-none text-foreground">
+              <p className="text-sm font-bold leading-none text-foreground truncate">
                 {user.user_metadata?.full_name || "Account"}
               </p>
-              <p className="text-xs leading-none text-muted-foreground truncate italic">
+              <p className="text-[11px] leading-none text-muted-foreground truncate italic">
                 {user.email}
               </p>
             </div>
@@ -66,14 +67,14 @@ export default function UserProfile() {
           
           <DropdownMenuSeparator className="mx-1" />
           
-          <DropdownMenuItem asChild className="cursor-pointer gap-2 py-2.5">
+          <DropdownMenuItem asChild className="cursor-pointer gap-2.5 py-2.5 rounded-md transition-colors focus:bg-accent focus:text-accent-foreground">
             <Link href="/admin">
               <LayoutDashboard size={16} className="text-muted-foreground" />
               Dashboard
             </Link>
           </DropdownMenuItem>
           
-          <DropdownMenuItem asChild className="cursor-pointer gap-2 py-2.5">
+          <DropdownMenuItem asChild className="cursor-pointer gap-2.5 py-2.5 rounded-md transition-colors focus:bg-accent focus:text-accent-foreground">
             <Link href="/settings">
               <Settings size={16} className="text-muted-foreground" />
               Settings
@@ -82,9 +83,13 @@ export default function UserProfile() {
           
           <DropdownMenuSeparator className="mx-1" />
           
-          {/* FIXED: Removed text-destructive (Red color) */}
+          {/* FINAL FIX: Ensure ALL states use standard focus/accent colors */}
           <DropdownMenuItem 
-            className="cursor-pointer gap-2 py-2.5 text-foreground focus:bg-accent focus:text-accent-foreground"
+            className="cursor-pointer gap-2.5 py-2.5 rounded-md text-foreground transition-colors
+              focus:bg-accent focus:text-accent-foreground
+              hover:bg-accent hover:text-accent-foreground
+              data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground
+              touch-none"
             onClick={() => supabase.auth.signOut()}
           >
             <LogOut size={16} className="text-muted-foreground" />
