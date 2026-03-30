@@ -12,6 +12,8 @@ import DashboardOverview from "@/components/admin/dashboard-overview"
 import MessagesManager from "@/components/admin/messages-manager"
 import AdminSettings from "@/components/admin/admin-settings"
 import HeroSettings from "@/components/admin/hero-settings"
+// --- IMPORT YOUR NEW BROADCAST COMPONENT ---
+import BroadcastForm from "@/components/ui/broadcast-form" 
 import { useToast } from "@/hooks/use-toast"
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -23,6 +25,7 @@ type AdminTab =
   | "events"
   | "collaborators"
   | "messages"
+  | "Broadcast" // Note: This matches your type
   | "settings"
 
 const ADMIN_EMAIL = "sangamkunwar48@gmail.com"
@@ -39,40 +42,25 @@ export default function AdminPage() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        console.log("[Sangam Kunwar] Checking admin authentication...")
-
         const {
           data: { session },
         } = await supabase.auth.getSession()
 
         if (session) {
-          console.log("[Sangam Kunwar] Session found:", session.user.email)
-
           if (session.user.email === ADMIN_EMAIL) {
-            console.log("[Sangam Kunwar] Admin access granted")
             setUser(session.user)
           } else {
-            console.warn(
-              "[Sangam Kunwar] Unauthorized access attempt by:",
-              session.user.email
-            )
-
             toast({
               title: "Access Denied",
               description: "This area is strictly for the administrator.",
               variant: "destructive",
             })
-
             window.location.href = "/"
           }
         } else {
-          console.log(
-            "[Sangam Kunwar] No session found, redirecting to login"
-          )
           window.location.href = "/auth/login?redirect=/admin"
         }
       } catch (err) {
-        console.error("[Sangam Kunwar] Admin auth check failed:", err)
         router.push("/auth/login")
       } finally {
         setLoading(false)
@@ -117,6 +105,20 @@ export default function AdminPage() {
           {activeTab === "events" && <EventsManager />}
           {activeTab === "collaborators" && <CollaboratorsManager />}
           {activeTab === "messages" && <MessagesManager />}
+          
+          {/* --- ADD THE BROADCAST TAB CONTENT HERE --- */}
+          {activeTab === "Broadcast" && (
+            <div className="max-w-4xl mx-auto">
+              <div className="mb-6">
+                <h1 className="text-3xl font-bold tracking-tight">Email Broadcast</h1>
+                <p className="text-muted-foreground mt-1">
+                  Send an email announcement to all registered users.
+                </p>
+              </div>
+              <BroadcastForm />
+            </div>
+          )}
+
           {activeTab === "settings" && (
             <AdminSettings userEmail={user.email} />
           )}
