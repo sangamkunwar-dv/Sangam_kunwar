@@ -1,6 +1,16 @@
 "use client"
 
-import { LayoutDashboard, FileText, Calendar, Users, Mail, LogOut, Settings, ImageIcon } from "lucide-react"
+import { 
+  LayoutDashboard, 
+  FileText, 
+  Calendar, 
+  Users, 
+  Mail, 
+  LogOut, 
+  Settings, 
+  ImageIcon, 
+  Send // Imported Send icon for Broadcast
+} from "lucide-react"
 
 interface AdminSidebarProps {
   activeTab: string
@@ -16,11 +26,13 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }: Admi
     { id: "events", label: "Events", icon: Calendar },
     { id: "collaborators", label: "Collaborators", icon: Users },
     { id: "messages", label: "Messages", icon: Mail },
+    // --- ADDED BROADCAST ITEM ---
+    { id: "Broadcast", label: "Broadcast", icon: Send }, 
     { id: "settings", label: "Settings", icon: Settings },
   ]
 
   return (
-    <aside className="w-64 bg-card border-r border-border flex flex-col">
+    <aside className="w-64 bg-card border-r border-border flex flex-col h-full">
       <div className="p-6 border-b border-border">
         <h2 className="text-2xl font-bold text-foreground">Admin Panel</h2>
         <p className="text-sm text-muted-foreground">Sangam Kunwar</p>
@@ -34,7 +46,9 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }: Admi
               key={item.id}
               onClick={() => setActiveTab(item.id)}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                activeTab === item.id ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-secondary"
+                activeTab === item.id 
+                  ? "bg-primary text-primary-foreground shadow-md" 
+                  : "text-foreground hover:bg-secondary"
               }`}
             >
               <Icon size={20} />
@@ -47,7 +61,7 @@ export default function AdminSidebar({ activeTab, setActiveTab, onLogout }: Admi
       <div className="p-4 border-t border-border">
         <button
           onClick={onLogout}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-secondary transition-colors"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-destructive hover:text-destructive-foreground transition-colors"
         >
           <LogOut size={20} />
           <span className="font-medium">Logout</span>
