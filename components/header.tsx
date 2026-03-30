@@ -10,10 +10,11 @@ import { createClient } from "@/lib/supabase/client"
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const [user, setUser] = useState<any>(null)
+  const [loading, setLoading] = useState(true) // Added loading state
   const { isDark, toggleTheme } = useTheme()
   const supabase = createClient()
 
-  // Change this to your actual admin email
+  // Replace with your actual admin email
   const ADMIN_EMAIL = "sangamkunwar.contact@gmail.com" 
   const isAdmin = user?.email === ADMIN_EMAIL
 
@@ -26,20 +27,27 @@ export default function Header() {
 
   useEffect(() => {
     const getSession = async () => {
+      setLoading(true)
       const { data: { session } } = await supabase.auth.getSession()
       setUser(session?.user ?? null)
+      setLoading(false)
     }
     getSession()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
+      setLoading(false)
     })
 
     return () => subscription.unsubscribe()
   }, [supabase])
 
-  // Determine the correct link based on user role
-  const profileHref = user ? (isAdmin ? "/admin" : "/dashboard") : "/"
+  // Logic for the profile link
+  const getProfileHref = () => {
+    if (loading) return "#" // Prevent jumping while loading
+    if (!user) return "/"
+    return isAdmin ? "/admin" : "/dashboard"
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -48,8 +56,8 @@ export default function Header() {
           
           {/* LEFT SIDE: Clickable Profile/Logo Section */}
           <Link 
-            href={profileHref} 
-            className="flex items-center gap-3 hover:opacity-80 transition-all group"
+            href={getProfileHref()} 
+            className={`flex items-center gap-3 transition-all group ${loading ? 'opacity-50 cursor-wait' : 'hover:opacity-80'}`}
           >
             <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary shadow-sm bg-muted flex items-center justify-center group-hover:scale-105 transition-transform">
               {user?.user_metadata?.avatar_url ? (
@@ -74,7 +82,7 @@ export default function Header() {
               <span className="hidden sm:inline font-bold text-sm leading-tight text-foreground">
                 {user ? (user.user_metadata?.full_name || (isAdmin ? "Admin" : "User")) : "Sangam Kunwar"}
               </span>
-              {user && (
+              {user && !loading && (
                 <span className="hidden sm:inline text-[10px] text-primary font-bold tracking-tighter animate-pulse">
                   GO TO {isAdmin ? "ADMIN" : "DASHBOARD"} →
                 </span>
@@ -105,7 +113,7 @@ export default function Header() {
               {isDark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
 
-            {!user ? (
+            {!user && !loading ? (
               <>
                 <Link
                   href="/auth/login"
@@ -120,10 +128,10 @@ export default function Header() {
                   Sign Up
                 </Link>
               </>
-            ) : (
+            ) : user && (
               <button
                 onClick={() => supabase.auth.signOut()}
-                className="hidden sm:inline-block px-4 py-2 text-sm font-medium border border-border rounded-full hover:bg-accent hover:text-accent-foreground transition-colors"
+                className="hidden sm:inline-block px-4 py-2 text-sm font-medium border border-border rounded-full hover:bg-secondary hover:text-secondary-foreground transition-colors"
               >
                 Sign Out
               </button>
@@ -152,12 +160,7 @@ export default function Header() {
               </Link>
             ))}
             
-            {!user ? (
-              <div className="grid grid-cols-2 gap-2 px-4 pt-2">
-                <Link href="/auth/login" className="text-center py-2 text-sm border rounded-lg">Login</Link>
-                <Link href="/auth/signup" className="text-center py-2 text-sm bg-primary text-white rounded-lg">Sign Up</Link>
-              </div>
-            ) : (
+            {user ? (
               <button
                 onClick={() => {
                   supabase.auth.signOut()
@@ -167,6 +170,11 @@ export default function Header() {
               >
                 Log Out
               </button>
+            ) : !loading && (
+              <div className="grid grid-cols-2 gap-2 px-4 pt-2">
+                <Link href="/auth/login" className="text-center py-2 text-sm border rounded-lg">Login</Link>
+                <Link href="/auth/signup" className="text-center py-2 text-sm bg-primary text-white rounded-lg">Sign Up</Link>
+              </div>
             )}
           </div>
         )}
