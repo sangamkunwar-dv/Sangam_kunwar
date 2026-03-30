@@ -15,7 +15,7 @@ export default function Header() {
   const supabase = createClient()
 
   // Replace with your actual admin email
-  const ADMIN_EMAIL = "sangamkunwar.contact@gmail.com" 
+  const ADMIN_EMAIL = "sangamkunwar48@gmail.com" 
   const isAdmin = user?.email === ADMIN_EMAIL
 
   const navItems = [
