@@ -12,20 +12,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
+import { LogOut, LayoutDashboard, Settings } from "lucide-react" // Added icons for a nicer look
 
 export default function UserProfile() {
   const [user, setUser] = useState<any>(null)
   const supabase = createClient()
 
   useEffect(() => {
-    // 1. Get initial session
     const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession()
       setUser(session?.user ?? null)
     }
     getSession()
 
-    // 2. Listen for login/logout changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
     })
@@ -33,10 +32,9 @@ export default function UserProfile() {
     return () => subscription.unsubscribe()
   }, [supabase])
 
-  // If not logged in, show nothing (or a Login button)
   if (!user) {
     return (
-      <Link href="/auth/login" className="text-sm font-medium hover:text-primary">
+      <Link href="/auth/login" className="text-sm font-medium hover:text-primary transition-colors">
         Login
       </Link>
     )
@@ -45,36 +43,51 @@ export default function UserProfile() {
   return (
     <div className="flex items-center gap-3">
       <DropdownMenu>
-        <DropdownMenuTrigger className="outline-none">
-          <Avatar className="h-9 w-9 border-2 border-primary/20 hover:border-primary transition-all">
-            {/* The user's Google/GitHub photo */}
+        <DropdownMenuTrigger className="outline-none group">
+          <Avatar className="h-9 w-9 border-2 border-primary/10 group-hover:border-primary/50 transition-all duration-300">
             <AvatarImage src={user.user_metadata?.avatar_url} />
-            {/* Fallback to initials if no photo */}
-            <AvatarFallback className="bg-primary text-primary-foreground">
+            <AvatarFallback className="bg-primary text-primary-foreground font-bold">
               {user.email?.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         
-        <DropdownMenuContent align="start" className="w-56 mt-2">
-          <DropdownMenuLabel className="font-normal">
+        <DropdownMenuContent align="start" className="w-64 mt-2 p-2 shadow-xl border-border/50 backdrop-blur-md">
+          <DropdownMenuLabel className="font-normal px-2 py-3">
             <div className="flex flex-col space-y-1">
-              <p className="text-sm font-bold leading-none">{user.user_metadata?.full_name || "User"}</p>
-              <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+              <p className="text-sm font-bold leading-none text-foreground">
+                {user.user_metadata?.full_name || "Account"}
+              </p>
+              <p className="text-xs leading-none text-muted-foreground truncate italic">
+                {user.email}
+              </p>
             </div>
           </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
-            <Link href="/admin">Dashboard</Link>
+          
+          <DropdownMenuSeparator className="mx-1" />
+          
+          <DropdownMenuItem asChild className="cursor-pointer gap-2 py-2.5">
+            <Link href="/admin">
+              <LayoutDashboard size={16} className="text-muted-foreground" />
+              Dashboard
+            </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/settings">Settings</Link>
+          
+          <DropdownMenuItem asChild className="cursor-pointer gap-2 py-2.5">
+            <Link href="/settings">
+              <Settings size={16} className="text-muted-foreground" />
+              Settings
+            </Link>
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          
+          <DropdownMenuSeparator className="mx-1" />
+          
+          {/* FIXED: Removed text-destructive (Red color) */}
           <DropdownMenuItem 
-            className="text-destructive focus:bg-destructive/10"
+            className="cursor-pointer gap-2 py-2.5 text-foreground focus:bg-accent focus:text-accent-foreground"
             onClick={() => supabase.auth.signOut()}
           >
+            <LogOut size={16} className="text-muted-foreground" />
             Log out
           </DropdownMenuItem>
         </DropdownMenuContent>
