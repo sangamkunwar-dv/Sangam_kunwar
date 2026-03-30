@@ -3,25 +3,32 @@
 import { useEffect, useState } from "react"
 
 export default function CookieBanner() {
-  const [consentStatus, setConsentStatus] = useState(null)
+  // 1. Start with 'hidden' to avoid SSR mismatch, but we will trigger it immediately
+  const [consentStatus, setConsentStatus] = useState("checking")
 
   useEffect(() => {
+    // 2. Look for the specific cookie
     const savedConsent = document.cookie.match(/cookie_preference=([^;]+)/);
+    
     if (savedConsent) {
+      // If found (accepted or rejected), set that status
       setConsentStatus(savedConsent[1]);
     } else {
-      setConsentStatus("unselected");
+      // If NO cookie is found, set to "show_banner"
+      setConsentStatus("show_banner");
     }
   }, [])
 
   const handleConsent = async (choice) => {
+    // Save the choice so it doesn't show again
     document.cookie = `cookie_preference=${choice}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`;
-    setConsentStatus(choice);
-
-    // Analysis Hack for Vercel Hobby Plan
+    
+    // Analysis Hack for your Vercel Hobby Dashboard
     const url = new URL(window.location.href);
     url.searchParams.set('consent', choice);
     window.history.pushState({}, '', url);
+
+    setConsentStatus(choice);
 
     if (choice === "accepted") {
       try {
@@ -31,7 +38,8 @@ export default function CookieBanner() {
     }
   }
 
-  if (consentStatus === null || consentStatus === "accepted" || consentStatus === "rejected") {
+  // 3. CRITICAL: Only return null if the status is officially 'accepted' or 'rejected'
+  if (consentStatus === "checking" || consentStatus === "accepted" || consentStatus === "rejected") {
     return null;
   }
 
@@ -39,29 +47,27 @@ export default function CookieBanner() {
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-4xl z-[100] animate-in fade-in slide-in-from-bottom-10 duration-700">
       <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gray-950/80 backdrop-blur-xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col md:flex-row items-center justify-between gap-6">
         
-        {/* Subtle Background Glow */}
         <div className="absolute -top-24 -left-24 h-48 w-48 bg-blue-500/10 blur-[100px]" />
         
         <div className="relative z-10 flex-1">
           <h3 className="text-white font-bold text-lg flex items-center gap-2">
-            <span>🍪</span> Cookie Preferences
+            <span>🍪</span> Cookie Settings
           </h3>
-          <p className="text-gray-400 text-sm mt-1 leading-relaxed">
-            We use cookies to analyze site traffic and improve your experience. 
-            Choose <span className="text-white italic">"Accept All"</span> to help us grow, or <span className="text-white italic">"Reject"</span> to keep things essential.
+          <p className="text-gray-400 text-sm mt-1">
+            We use cookies to analyze traffic. Help us improve by accepting, or reject to keep only essential cookies.
           </p>
         </div>
 
         <div className="relative z-10 flex items-center gap-3 w-full md:w-auto">
           <button
             onClick={() => handleConsent("rejected")}
-            className="flex-1 md:flex-none text-gray-400 hover:text-white text-sm font-semibold py-2.5 px-6 rounded-xl transition-all hover:bg-white/5 active:scale-95"
+            className="flex-1 md:flex-none text-gray-400 hover:text-white text-sm font-semibold py-2.5 px-6 rounded-xl transition-all hover:bg-white/5"
           >
-            Reject All
+            Reject
           </button>
           <button
             onClick={() => handleConsent("accepted")}
-            className="flex-1 md:flex-none bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-sm font-bold py-2.5 px-8 rounded-xl shadow-lg shadow-blue-500/20 transition-all active:scale-95"
+            className="flex-1 md:flex-none bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-sm font-bold py-2.5 px-8 rounded-xl shadow-lg transition-all active:scale-95"
           >
             Accept All
           </button>
