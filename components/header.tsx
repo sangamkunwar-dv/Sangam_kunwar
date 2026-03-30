@@ -13,6 +13,10 @@ export default function Header() {
   const { isDark, toggleTheme } = useTheme()
   const supabase = createClient()
 
+  // Change this to your actual admin email
+  const ADMIN_EMAIL = "sangamkunwar.contact@gmail.com" 
+  const isAdmin = user?.email === ADMIN_EMAIL
+
   const navItems = [
     { label: "About", href: "#about" },
     { label: "Projects", href: "#projects" },
@@ -34,6 +38,9 @@ export default function Header() {
     return () => subscription.unsubscribe()
   }, [supabase])
 
+  // Determine the correct link based on user role
+  const profileHref = user ? (isAdmin ? "/admin" : "/dashboard") : "/"
+
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className="mx-auto max-w-6xl px-4 py-3 sm:px-6 lg:px-8">
@@ -41,7 +48,7 @@ export default function Header() {
           
           {/* LEFT SIDE: Clickable Profile/Logo Section */}
           <Link 
-            href={user ? "/dashboard" : "/"} 
+            href={profileHref} 
             className="flex items-center gap-3 hover:opacity-80 transition-all group"
           >
             <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary shadow-sm bg-muted flex items-center justify-center group-hover:scale-105 transition-transform">
@@ -65,11 +72,11 @@ export default function Header() {
             </div>
             <div className="flex flex-col">
               <span className="hidden sm:inline font-bold text-sm leading-tight text-foreground">
-                {user ? (user.user_metadata?.full_name || "My Dashboard") : "Sangam Kunwar"}
+                {user ? (user.user_metadata?.full_name || (isAdmin ? "Admin" : "User")) : "Sangam Kunwar"}
               </span>
               {user && (
                 <span className="hidden sm:inline text-[10px] text-primary font-bold tracking-tighter animate-pulse">
-                  GO TO DASHBOARD →
+                  GO TO {isAdmin ? "ADMIN" : "DASHBOARD"} →
                 </span>
               )}
             </div>
@@ -152,7 +159,10 @@ export default function Header() {
               </div>
             ) : (
               <button
-                onClick={() => supabase.auth.signOut()}
+                onClick={() => {
+                  supabase.auth.signOut()
+                  setIsOpen(false)
+                }}
                 className="w-full text-center py-2 text-sm font-medium hover:bg-muted rounded-lg mt-2"
               >
                 Log Out
