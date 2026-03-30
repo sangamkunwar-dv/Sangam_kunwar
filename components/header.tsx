@@ -20,7 +20,6 @@ export default function Header() {
     { label: "Contact", href: "#contact" },
   ]
 
-  // Listen for Auth changes to update photo automatically
   useEffect(() => {
     const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession()
@@ -52,7 +51,6 @@ export default function Header() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                // Default photo if not logged in
                 <Image
                   src="/sangamkunwarphoto.png"
                   alt="Sangam Kunwar"
@@ -93,7 +91,6 @@ export default function Header() {
               {isDark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
 
-            {/* If NOT logged in: Show Auth Buttons */}
             {!user ? (
               <>
                 <Link
@@ -111,16 +108,15 @@ export default function Header() {
                 </Link>
               </>
             ) : (
-              // If Logged in: Show Sign Out button on the right
+              // FIXED: Changed hover:bg-destructive to hover:bg-muted and removed text-destructive-foreground
               <button
                 onClick={() => supabase.auth.signOut()}
-                className="hidden sm:inline-block px-4 py-2 text-sm font-medium border border-border rounded-full hover:bg-destructive hover:text-destructive-foreground transition-colors"
+                className="hidden sm:inline-block px-4 py-2 text-sm font-medium border border-border rounded-full hover:bg-muted hover:text-foreground transition-colors"
               >
                 Sign Out
               </button>
             )}
 
-            {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="md:hidden p-2 hover:bg-muted rounded-lg transition-colors"
@@ -145,7 +141,6 @@ export default function Header() {
               </Link>
             ))}
             
-            {/* Mobile Auth Logic */}
             {!user ? (
               <div className="grid grid-cols-2 gap-2 px-4 pt-2">
                 <Link 
@@ -164,12 +159,13 @@ export default function Header() {
                 </Link>
               </div>
             ) : (
+              // FIXED: Removed text-destructive and hover:bg-destructive/10
               <button
                 onClick={() => {
                   supabase.auth.signOut();
                   setIsOpen(false);
                 }}
-                className="w-full text-center py-2 text-sm font-medium text-destructive hover:bg-destructive/10 rounded-lg"
+                className="w-full text-center py-2 text-sm font-medium text-foreground hover:bg-muted rounded-lg"
               >
                 Log Out
               </button>
