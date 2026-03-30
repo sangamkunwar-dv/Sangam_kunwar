@@ -31,11 +31,14 @@ export default function LoginPage() {
       provider,
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     })
+    // Note: Profiles for OAuth are usually handled in the /auth/callback route 
+    // or via the Supabase SQL Trigger we discussed earlier.
   }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
@@ -44,6 +47,18 @@ export default function LoginPage() {
       toast({ title: "Verify Email", description: "Please check your inbox.", variant: "destructive" })
       await supabase.auth.signOut()
     } else {
+      // --- BROADCAST SYNC LOGIC ---
+      // Ensure user is in the profiles table for email broadcasts
+      try {
+        await supabase.from("profiles").upsert({
+          id: data.user.id,
+          email: data.user.email,
+        })
+      } catch (syncError) {
+        console.error("Failed to sync profile for broadcast", syncError)
+      }
+      // ----------------------------
+
       window.location.href = email === "sangamkunwar48@gmail.com" ? "/admin" : "/dashboard"
     }
     setLoading(false)
@@ -66,13 +81,22 @@ export default function LoginPage() {
             <Button className="w-full" disabled={loading}>{loading ? "Processing..." : forgotPassword ? "Send Reset Link" : "Sign In"}</Button>
           </form>
 
-          <div className="relative"><div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div><div className="relative flex justify-center text-xs uppercase"><span className="bg-background px-2 text-muted-foreground">Or</span></div></div>
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
+            <div className="relative flex justify-center text-xs uppercase"><span className="bg-background px-2 text-muted-foreground">Or</span></div>
+          </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <Button variant="outline" onClick={() => handleOAuth("github")} className="hover:bg-[#24292F] hover:text-white transition-all"><Github className="mr-2 h-4 w-4" /> GitHub</Button>
-            <Button variant="outline" onClick={() => handleOAuth("google")} className="hover:bg-gray-50"><GoogleLogo /> Google</Button>
+            <Button variant="outline" onClick={() => handleOAuth("github")} className="hover:bg-[#24292F] hover:text-white transition-all">
+              <Github className="mr-2 h-4 w-4" /> GitHub
+            </Button>
+            <Button variant="outline" onClick={() => handleOAuth("google")} className="hover:bg-gray-50">
+              <GoogleLogo /> Google
+            </Button>
           </div>
-          <p className="text-center text-sm text-muted-foreground">New here? <Link href="/auth/signup" className="text-primary hover:underline font-medium">Create account</Link></p>
+          <p className="text-center text-sm text-muted-foreground">
+            New here? <Link href="/auth/signup" className="text-primary hover:underline font-medium">Create account</Link>
+          </p>
         </div>
       </Card>
     </div>
