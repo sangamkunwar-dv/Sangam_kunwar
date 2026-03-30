@@ -1,5 +1,6 @@
-import Link from "next/link" // Added Link for internal routing
-import { Github, Linkedin, Mail, Phone, MapPin, ShieldCheck } from "lucide-react"
+import Link from "next/link"
+import Image from "next/image" // Import Image component
+import { Github, Linkedin, Mail, Phone, MapPin, ShieldCheck, FileText } from "lucide-react"
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -18,10 +19,21 @@ export default function Footer() {
     <footer id="contact" className="border-t border-border bg-muted/30">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="grid gap-8 md:grid-cols-3 mb-8">
-          {/* Brand */}
+          
+          {/* Brand & Logo */}
           <div className="space-y-4">
-            <h3 className="text-lg font-bold text-primary">Sangam Kunwar</h3>
-            <p className="text-sm text-muted-foreground">
+            <div className="flex items-center gap-3">
+              {/* Replace '/logo.png' with your actual logo path */}
+              <Image 
+                src="/sangamkunwarphoto.png" 
+                alt="Sangam Kunwar Logo" 
+                width={40} 
+                height={40} 
+                className="rounded-lg object-contain"
+              />
+              <h3 className="text-lg font-bold text-primary">Sangam Kunwar</h3>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
               Full-stack developer building beautiful digital experiences with modern web technologies.
             </p>
           </div>
@@ -84,6 +96,13 @@ export default function Footer() {
             >
               <ShieldCheck size={14} />
               Privacy Policy
+            </Link>
+            <Link 
+              href="/terms" 
+              className="flex items-center gap-1.5 hover:text-primary transition-colors"
+            >
+              <FileText size={14} />
+              Terms & Conditions
             </Link>
           </div>
         </div>
