@@ -1,86 +1,69 @@
 import Link from "next/link";
-import { ArrowLeft, FileText, scale } from "lucide-react";
+import { ChevronLeft, ShieldCheck, Scale, AlertCircle } from "lucide-react";
 
-export default function TermsPage() {
-  const currentYear = new Date().getFullYear();
-  const lastUpdated = "March 30, 2026";
+export default function TermsOfService() {
+  const lastUpdated = "March 31, 2026";
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-300 selection:bg-blue-500/30">
-      {/* Background Decor */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full" />
-        <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-indigo-600/10 blur-[120px] rounded-full" />
-      </div>
-
-      <div className="relative max-w-4xl mx-auto px-6 py-20">
+    <div className="min-h-screen bg-background text-foreground py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
         {/* Back Button */}
         <Link 
           href="/" 
-          className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-white transition-colors mb-12 group"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-8"
         >
-          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-          Back to Portfolio
+          <ChevronLeft size={16} />
+          Back to Home
         </Link>
 
-        {/* Header */}
-        <header className="mb-16">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-600/20 text-blue-400 mb-6 border border-blue-500/20">
-            <FileText size={24} />
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-            Terms & Conditions
-          </h1>
-          <p className="text-gray-500 text-sm">
-            Last updated: {lastUpdated} • © {currentYear} Sangam Kunwar
-          </p>
-        </header>
+        <div className="space-y-6">
+          <header className="border-b border-border pb-6">
+            <h1 className="text-4xl font-extrabold tracking-tight">Terms of Service</h1>
+            <p className="text-muted-foreground mt-2">Last Updated: {lastUpdated}</p>
+          </header>
 
-        {/* Content Card */}
-        <div className="prose prose-invert prose-blue max-w-none bg-white/[0.02] backdrop-blur-md border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl">
-          
-          <section className="mb-10">
-            <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-              1. Acceptance of Terms
-            </h2>
-            <p className="leading-relaxed">
-              By accessing and using <strong>sangamkunwar.com.np</strong>, you accept and agree to be bound by the terms and provision of this agreement.
+          <section className="space-y-4">
+            <div className="flex items-center gap-2 text-primary font-bold">
+              <ShieldCheck size={20} />
+              <h2>1. Acceptance of Terms</h2>
+            </div>
+            <p className="text-muted-foreground leading-relaxed">
+              By accessing the website of <strong>Sangam Kunwar</strong> (sangamkunwar.com.np), you agree to be bound by these terms. If you do not agree, please do not use this site.
             </p>
           </section>
 
-          <section className="mb-10">
-            <h2 className="text-xl font-semibold text-white mb-4">
-              2. Intellectual Property
-            </h2>
-            <p className="leading-relaxed">
-              The code, design, and content on this portfolio are the intellectual property of Sangam Kunwar. You may view and use the code for educational purposes, but commercial reproduction is strictly prohibited without consent.
+          <section className="space-y-4">
+            <div className="flex items-center gap-2 text-primary font-bold">
+              <Scale size={20} />
+              <h2>2. Use of Content</h2>
+            </div>
+            <p className="text-muted-foreground leading-relaxed">
+              All projects, code snippets, and creative assets displayed on this portfolio are the intellectual property of Sangam Kunwar unless otherwise stated. You may view and interact with the content for informational purposes.
             </p>
           </section>
 
-          <section className="mb-10">
-            <h2 className="text-xl font-semibold text-white mb-4">
-              3. User Conduct
-            </h2>
-            <p className="leading-relaxed">
-              Users are prohibited from attempting to breach the security of the admin dashboard or using the contact forms for spamming purposes.
+          <section className="space-y-4">
+            <div className="flex items-center gap-2 text-primary font-bold">
+              <AlertCircle size={20} />
+              <h2>3. User Accounts & Broadcasts</h2>
+            </div>
+            <p className="text-muted-foreground leading-relaxed">
+              When you register or provide your email for broadcasts, you agree to receive technical updates and project announcements. We reserve the right to terminate access to the dashboard for any user who violates site integrity.
             </p>
           </section>
 
-          <section className="mb-10">
-            <h2 className="text-xl font-semibold text-white mb-4">
-              4. Cookies & Analysis
-            </h2>
-            <p className="leading-relaxed">
-              We use cookies to improve user experience. By using this site, you acknowledge our use of Vercel Analytics to track site traffic based on your cookie consent preferences.
-            </p>
-          </section>
-
-          <div className="pt-10 border-t border-white/5 mt-10 text-center">
-            <p className="text-sm text-gray-500">
-              Questions about these terms? Reach out via the <Link href="/#contact" className="text-blue-400 hover:underline">Contact Form</Link>.
+          <div className="bg-muted p-6 rounded-xl border border-border">
+            <h3 className="font-bold mb-2">Questions?</h3>
+            <p className="text-sm text-muted-foreground">
+              If you have any questions regarding these terms, please reach out via the 
+              <Link href="/#contact" className="text-primary hover:underline ml-1">Contact Section</Link>.
             </p>
           </div>
         </div>
+
+        <footer className="mt-12 text-center text-xs text-muted-foreground border-t border-border pt-8">
+          &copy; {new Date().getFullYear()} Sangam Kunwar. All rights reserved. Tilottama, Nepal.
+        </footer>
       </div>
     </div>
   );
