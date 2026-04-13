@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
-    // 1. Fetch all emails from our profiles table
+    // 1. Fetch all emails from our profiles
     const { data: users, error: dbError } = await supabase
       .from("profiles")
       .select("email")
