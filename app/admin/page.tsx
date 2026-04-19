@@ -6,8 +6,6 @@ import { createClient } from "@/lib/supabase/client"
 import AdminSidebar from "@/components/admin/sidebar"
 import ProjectsManager from "@/components/admin/projects-manager"
 import SkillsManager from "@/components/admin/skills-manager"
-import EventsManager from "@/components/admin/events-manager"
-import CollaboratorsManager from "@/components/admin/collaborators-manager"
 import DashboardOverview from "@/components/admin/dashboard-overview"
 import MessagesManager from "@/components/admin/messages-manager"
 import AdminSettings from "@/components/admin/admin-settings"
@@ -22,8 +20,6 @@ type AdminTab =
   | "hero"
   | "projects"
   | "skills"
-  | "events"
-  | "collaborators"
   | "messages"
   | "Broadcast"
   | "settings"
@@ -116,8 +112,6 @@ export default function AdminPage() {
             {activeTab === "hero" && <HeroSettings />}
             {activeTab === "projects" && <ProjectsManager />}
             {activeTab === "skills" && <SkillsManager />}
-            {activeTab === "events" && <EventsManager />}
-            {activeTab === "collaborators" && <CollaboratorsManager />}
             {activeTab === "messages" && <MessagesManager />}
             
             {activeTab === "Broadcast" && (
