@@ -1,19 +1,18 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script"; // ✅ ADD THIS
 import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/theme-provider";
 import BackgroundMusic from "@/components/BackgroundMusic";
 import CookieBanner from "@/components/CookieBanner";
 import "./globals.css"; 
 
-// Fonts (replace Geist with Inter)
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap", 
 });
 
-// Metadata
 export const metadata: Metadata = {
   metadataBase: new URL("https://sangamkunwar.com.np"),
 
@@ -71,7 +70,16 @@ export default function RootLayout({
     <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
         <meta name="theme-color" content="#7b3fe4" />
-        {/* Register Service Worker */}
+
+        {/* ✅ Google AdSense Script */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5849186110366340"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+
+        {/* Service Worker */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
