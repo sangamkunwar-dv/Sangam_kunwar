@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/theme-provider";
 import BackgroundMusic from "@/components/BackgroundMusic";
@@ -26,7 +25,7 @@ export const metadata: Metadata = {
 
   generator: "sangamkunwar",
 
-  // ✅ IMPORTANT for AdSense verification
+  // ✅ AdSense verification meta
   other: {
     "google-adsense-account": "ca-pub-5849186110366340",
   },
@@ -76,13 +75,12 @@ export default function RootLayout({
       <head>
         <meta name="theme-color" content="#7b3fe4" />
 
-        {/* ✅ Google AdSense Script (FIXED) */}
-        <Script
+        {/* ✅ FIXED: Use RAW script (NO next/script) */}
+        <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5849186110366340"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        ></script>
       </head>
 
       <body className={`${inter.className} font-sans antialiased`}>
